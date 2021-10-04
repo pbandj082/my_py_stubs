@@ -280,7 +280,7 @@ RES_E_INTERNAL_FAIL_TIMEOUT: int  # internal timeout
 
 def initialize(
     path: Optional[int] = None,
-    *,
+    /,
     login: Optional[str] = None,
     password: Optional[str] = None,
     server: Optional[str] = None,
@@ -329,7 +329,8 @@ def initialize(
 
 
 def login(
-    login: Optional[int] = None,
+    login: Optional[int],
+    /,
     password: Optional[str] = None,
     server: Optional[str] = None,
     timeout: int = 60_000,
@@ -838,7 +839,7 @@ def symbols_get(group: Optional[str] = None) -> Optional[Tuple[SymbolInfo, ...]]
     """
 
 
-def symbol_info(symbol: str) -> Optional[SymbolInfo]:
+def symbol_info(symbol: str, /) -> Optional[SymbolInfo]:
     """Get data on the specified financial instrument.
 
     The function returns all data that can be obtained using SymbolInfoInteger,
@@ -897,7 +898,7 @@ class Tick(NamedTuple):
     volume_real: float
 
 
-def symbol_info_tick(symbol: str) -> Optional[Tick]:
+def symbol_info_tick(symbol: str, /) -> Optional[Tick]:
     """Get the last tick for the specified financial instrument.
 
     The function is similar to SymbolInfoTick.
@@ -941,7 +942,7 @@ def symbol_info_tick(symbol: str) -> Optional[Tick]:
     """
 
 
-def symbol_select(symbol: int, enable: bool = True) -> bool:
+def symbol_select(symbol: int, enable: bool = True, /) -> bool:
     """Select a symbol in the MarketWatch window or remove a symbol from the window.
 
     The function is similar to SymbolSelect.
@@ -994,7 +995,7 @@ def symbol_select(symbol: int, enable: bool = True) -> bool:
     """
 
 
-def market_book_add(symbol: str) -> bool:
+def market_book_add(symbol: str, /) -> bool:
     """Subscribes the MetaTrader 5 terminal to the Market Depth change events for a specified symbol.
 
     The function is similar to MarketBookAdd.
@@ -1014,7 +1015,7 @@ class BookInfo(NamedTuple):
     volume_dbl: float
 
 
-def market_book_get(symbol: str) -> Optional[Tuple[BookInfo, ...]]:
+def market_book_get(symbol: str, /) -> Optional[Tuple[BookInfo, ...]]:
     """Returns a tuple from BookInfo featuring Market Depth entries for the specified symbol.
 
     The subscription to the Market Depth change events should be preliminarily performed using the market_book_add() function.
@@ -1068,7 +1069,7 @@ def market_book_get(symbol: str) -> Optional[Tuple[BookInfo, ...]]:
         """
 
 
-def market_book_release(symbol: str) -> bool:
+def market_book_release(symbol: str, /) -> bool:
     """Cancels subscription of the MetaTrader 5 terminal to the Market Depth change events for a specified symbol.
 
     The function is similar to MarketBookRelease.
@@ -1086,6 +1087,7 @@ def copy_rates_from(
     timeframe: int,
     date_from: Union[dt.datetime, int],
     count: int,
+    /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get bars from the MetaTrader 5 terminal starting from the specified date.
 
@@ -1184,6 +1186,7 @@ def copy_rates_from_pos(
     timeframe: int,
     start_pos: int,
     count: int,
+    /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get bars from the MetaTrader 5 terminal starting from the specified index.
 
@@ -1239,6 +1242,7 @@ def copy_rates_range(
     timeframe: int,
     date_from: Union[dt.datetime, int],
     date_to: Union[dt.datetime, int],
+    /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get bars in the specified date range from the MetaTrader 5 terminal.
 
@@ -1316,6 +1320,7 @@ def copy_ticks_from(
     date_from: Union[dt.datetime, int],
     count: int,
     flags: int,
+    /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get ticks from the MetaTrader 5 terminal starting from the specified date.
 
@@ -1412,6 +1417,7 @@ def copy_ticks_range(
     date_from: Union[dt.datetime, int],
     date_to: Union[dt.datetime, int],
     flags: int,
+    /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get ticks for the specified date range from the MetaTrader 5 terminal.
 
@@ -1619,6 +1625,7 @@ def order_calc_margin(
     symbol: str,
     volume: float,
     price: float,
+    /,
 ) -> Optional[float]:
     """Return margin in the account currency to perform a specified trading operation.
 
@@ -1691,6 +1698,7 @@ def order_calc_profit(
     volume: float,
     price_open: float,
     price_close: float,
+    /,
 ) -> Optional[float]:
     """Return profit in the account currency for a specified trading operation.
 
@@ -1793,7 +1801,7 @@ class OrderCheckResult(NamedTuple):
     request: TradeRequest
 
 
-def order_check(request: dict) -> Optional[OrderCheckResult]:
+def order_check(request: dict, /) -> Optional[OrderCheckResult]:
     """Check funds sufficiency for performing a required trading operation.
 
     Check result are returned as the MqlTradeCheckResult structure.
@@ -1934,7 +1942,7 @@ class OrderSendResult(NamedTuple):
     request: TradeRequest
 
 
-def order_send(request: dict) -> Optional[OrderSendResult]:
+def order_send(request: dict, /) -> Optional[OrderSendResult]:
     """Send a request to perform a trading operation from the terminal to the trade server.
 
     The function is similar to OrderSend.
@@ -2128,14 +2136,32 @@ def positions_total() -> int:
 
 
 class TradePosition(NamedTuple):
-    ...
+    ticket: int
+    time: int
+    time_msc: int
+    time_update: int
+    time_update_msc: int
+    type: int
+    magic: int
+    identifier: int
+    reason: int
+    volume: float
+    price_open: float
+    sl: float
+    tp: float
+    price_current: float
+    swap: float
+    profit: float
+    symbol: str
+    comment: str
+    external_id: str
 
 
 def positions_get(
     symbol: Optional[str] = None,
     group: Optional[str] = None,
     ticket: Optional[int] = None,
-) -> Optional[Tuple[NamedTuple, ...]]:
+) -> Optional[Tuple[TradePosition, ...]]:
     """Get open positions with the ability to filter by symbol or ticket.
 
     There are three call options.
@@ -2196,6 +2222,302 @@ def positions_get(
             df=pd.DataFrame(list(usd_positions),columns=usd_positions[0]._asdict().keys())
             df['time'] = pd.to_datetime(df['time'], unit='s')
             df.drop(['time_update', 'time_msc', 'time_update_msc', 'external_id'], axis=1, inplace=True)
+            print(df)
+        
+        # shut down connection to the MetaTrader 5 terminal
+        mt5.shutdown()
+    """
+
+
+def history_orders_total(
+    date_from: Union[dt.datetime, int],
+    date_to: Union[dt.datetime, int],
+    /,
+) -> int:
+    """Get the number of orders in trading history within the specified interval.
+
+    Args:
+        date_from: Date the orders are requested from.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter.
+        date_to: Date, up to which the orders are requested.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter.
+    
+    Returns:
+        Integer value.
+
+    Example:
+        from datetime import datetime
+        import MetaTrader5 as mt5
+        # display data on the MetaTrader 5 package
+        print("MetaTrader5 package author: ",mt5.__author__)
+        print("MetaTrader5 package version: ",mt5.__version__)
+        
+        # establish connection to MetaTrader 5 terminal
+        if not mt5.initialize():
+            print("initialize() failed, error code =",mt5.last_error())
+            quit()
+        
+        # get the number of orders in history
+        from_date=datetime(2020,1,1)
+        to_date=datetime.now()
+        history_orders=mt5.history_orders_total(from_date, datetime.now())
+        if history_orders>0:
+            print("Total history orders=",history_orders)
+        else:
+            print("Orders not found in history")
+        
+        # shut down connection to the MetaTrader 5 terminal
+        mt5.shutdown()
+    """
+
+
+def history_orders_get(
+    date_from: Optional[Union[dt.datetime, int]] = None,
+    date_to: Optional[Union[dt.datetime, int]] = None,
+    /,
+    group: Optional[str] = None,
+    ticket: Optional[int] = None,
+    position: Optional[int] = None,
+) -> Optional[Tuple[TradeOrder, ...]]:
+    """Get orders from trading history with the ability to filter by ticket or position.
+
+    The function allows receiving all history orders within a specified period in
+    a single call similar to the HistoryOrdersTotal and HistoryOrderSelect tandem.
+    The group parameter may contain several comma separated conditions.
+    A condition can be set as a mask using '*'. The logical negation symbol
+    '!' can be used for an exclusion. All conditions are applied sequentially,
+    which means conditions of including to a group should be specified first followed by
+    an exclusion condition. For example, group="*, !EUR" means that deals for all symbols
+    should be selected first and the ones containing "EUR" in symbol names should be
+    excluded afterwards.
+
+    Args:
+        date_from: Date the orders are requested from.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter is specified first.
+        date_to: Date, up to which the orders are requested.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter is specified second.
+        group: The filter for arranging a group of necessary symbols.
+            Optional named parameter. If the group is specified,
+            the function returns only orders meeting a specified criteria for a symbol name.
+        ticket: Order ticket that should be received. Optional parameter.
+            If not specified, the filter is not applied.
+        position: Ticket of a position (stored in ORDER_POSITION_ID)
+            all orders should be received for. Optional parameter. If not specified,
+            the filter is not applied.
+    
+    Returns:
+        Return info in the form of a named tuple structure (namedtuple). Return None in case of an error. The info on the error can be obtained using last_error().
+
+    Example:
+        from datetime import datetime
+        import MetaTrader5 as mt5
+        import pandas as pd
+        pd.set_option('display.max_columns', 500) # number of columns to be displayed
+        pd.set_option('display.width', 1500)      # max table width to display
+        # display data on the MetaTrader 5 package
+        print("MetaTrader5 package author: ",mt5.__author__)
+        print("MetaTrader5 package version: ",mt5.__version__)
+        print()
+        # establish connection to the MetaTrader 5 terminal
+        if not mt5.initialize():
+            print("initialize() failed, error code =",mt5.last_error())
+            quit()
+        
+        # get the number of orders in history
+        from_date=datetime(2020,1,1)
+        to_date=datetime.now()
+        history_orders=mt5.history_orders_get(from_date, to_date, group="*GBP*")
+        if history_orders==None:
+            print("No history orders with group=\"*GBP*\", error code={}".format(mt5.last_error()))
+        elif len(history_orders)>0:
+            print("history_orders_get({}, {}, group=\"*GBP*\")={}".format(from_date,to_date,len(history_orders)))
+        print()
+        
+        # display all historical orders by a position ticket
+        position_id=530218319
+        position_history_orders=mt5.history_orders_get(position=position_id)
+        if position_history_orders==None:
+            print("No orders with position #{}".format(position_id))
+            print("error code =",mt5.last_error())
+        elif len(position_history_orders)>0:
+            print("Total history orders on position #{}: {}".format(position_id,len(position_history_orders)))
+            # display all historical orders having a specified position ticket
+            for position_order in position_history_orders:        
+                print(position_order)
+            print()
+            # display these orders as a table using pandas.DataFrame
+            df=pd.DataFrame(list(position_history_orders),columns=position_history_orders[0]._asdict().keys())
+            df.drop(['time_expiration','type_time','state','position_by_id','reason','volume_current','price_stoplimit','sl','tp'], axis=1, inplace=True)
+            df['time_setup'] = pd.to_datetime(df['time_setup'], unit='s')
+            df['time_done'] = pd.to_datetime(df['time_done'], unit='s')
+            print(df)
+        
+        # shut down connection to the MetaTrader 5 terminal
+        mt5.shutdown()
+    """
+
+
+def history_deals_total(
+    date_from: Union[dt.datetime, int],
+    date_to: Union[dt.datetime, int],
+    /,
+) -> int:
+    """Get the number of deals in trading history within the specified interval.
+
+    The function is similar to HistoryDealsTotal.
+
+    Args:
+        date_from: Date the deals are requested from.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter.
+        date_to: Date, up to which the deals are requested.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter.
+
+    Example:
+        from datetime import datetime
+        import MetaTrader5 as mt5
+        # display data on the MetaTrader 5 package
+        print("MetaTrader5 package author: ",mt5.__author__)
+        print("MetaTrader5 package version: ",mt5.__version__)
+        
+        # establish connection to MetaTrader 5 terminal
+        if not mt5.initialize():
+            print("initialize() failed, error code =",mt5.last_error())
+            quit()
+        
+        # get the number of deals in history
+        from_date=datetime(2020,1,1)
+        to_date=datetime.now()
+        deals=mt5.history_deals_total(from_date, to_date)
+        if deals>0:
+            print("Total deals=",deals)
+        else:
+            print("Deals not found in history")
+        
+        # shut down connection to the MetaTrader 5 terminal
+        mt5.shutdown()
+    """
+
+
+class TradeDeal(NamedTuple):
+    ticket: int
+    order: int
+    time: int
+    time_msc: int
+    type: int
+    entry: int
+    magic: int
+    position_id: int
+    reason: int
+    volume: float
+    price: float
+    commission: float
+    swap: float
+    profit: float
+    fee: float
+    symbol: str
+    comment: str
+    external_id: str
+
+
+def history_deals_get(
+    date_from: Optional[Union[dt.datetime, int]] = None,
+    date_to: Optional[Union[dt.datetime, int]] = None,
+    /,
+    group: Optional[str] = None,
+    ticket: Optional[int] = None,
+    position: Optional[int] = None,
+) -> Optional[Tuple[TradeDeal, ...]]:
+    """Get deals from trading history within the specified interval with the ability to filter by ticket or position.
+
+    The function allows receiving all history deals within a specified period in
+    a single call similar to the HistoryDealsTotal and HistoryDealSelect tandem.
+    The group parameter allows sorting out deals by symbols.
+    '*' can be used at the beginning and the end of a string.
+    The group parameter may contain several comma separated conditions.
+    A condition can be set as a mask using '*'. The logical negation symbol
+    '!' can be used for an exclusion. All conditions are applied sequentially,
+    which means conditions of including to a group should be specified first followed by
+    an exclusion condition. For example, group="*, !EUR" means that deals for all symbols
+    should be selected first and the ones containing "EUR" in symbol names should be
+    excluded afterwards.
+
+    Args:
+        date_from: Date the orders are requested from.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter is specified first.
+        date_to: Date, up to which the orders are requested.
+            Set by the 'datetime' object or as a number of seconds elapsed since 1970.01.01.
+            Required unnamed parameter is specified second.
+        group: The filter for arranging a group of necessary symbols.
+            Optional named parameter. If the group is specified,
+            the function returns only deals meeting a specified criteria for a symbol name.
+        ticket: Ticket of an order (stored in DEAL_ORDER) all deals should be received for.
+            Optional parameter. If not specified, the filter is not applied.
+        position: Ticket of a position (stored in DEAL_POSITION_ID) all deals should be
+            received for. Optional parameter. If not specified, the filter is not applied.
+
+    Returns:
+        Return info in the form of a named tuple structure (namedtuple).
+        Return None in case of an error. The info on the error can be obtained using last_error().
+
+    Example:
+        import MetaTrader5 as mt5
+        from datetime import datetime
+        import pandas as pd
+        pd.set_option('display.max_columns', 500) # number of columns to be displayed
+        pd.set_option('display.width', 1500)      # max table width to display
+        # display data on the MetaTrader 5 package
+        print("MetaTrader5 package author: ",mt5.__author__)
+        print("MetaTrader5 package version: ",mt5.__version__)
+        print()
+        # establish connection to the MetaTrader 5 terminal
+        if not mt5.initialize():
+            print("initialize() failed, error code =",mt5.last_error())
+            quit()
+        
+        # get the number of deals in history
+        from_date=datetime(2020,1,1)
+        to_date=datetime.now()
+        # get deals for symbols whose names contain "GBP" within a specified interval
+        deals=mt5.history_deals_get(from_date, to_date, group="*GBP*")
+        if deals==None:
+            print("No deals with group=\"*USD*\", error code={}".format(mt5.last_error()))
+        elif len(deals)> 0:
+            print("history_deals_get({}, {}, group=\"*GBP*\")={}".format(from_date,to_date,len(deals)))
+        
+        # get deals for symbols whose names contain neither "EUR" nor "GBP"
+        deals = mt5.history_deals_get(from_date, to_date, group="*,!*EUR*,!*GBP*")
+        if deals == None:
+            print("No deals, error code={}".format(mt5.last_error()))
+        elif len(deals) > 0:
+            print("history_deals_get(from_date, to_date, group=\"*,!*EUR*,!*GBP*\") =", len(deals))
+            # display all obtained deals 'as is'
+            for deal in deals:
+                print("  ",deal)
+            print()
+            # display these deals as a table using pandas.DataFrame
+            df=pd.DataFrame(list(deals),columns=deals[0]._asdict().keys())
+            df['time'] = pd.to_datetime(df['time'], unit='s')
+            print(df)
+        print("")
+        
+        # get all deals related to the position #530218319
+        position_id=530218319
+        position_deals = mt5.history_deals_get(position=position_id)
+        if position_deals == None:
+            print("No deals with position #{}".format(position_id))
+            print("error code =", mt5.last_error())
+        elif len(position_deals) > 0:
+            print("Deals with position id #{}: {}".format(position_id, len(position_deals)))
+            # display these deals as a table using pandas.DataFrame
+            df=pd.DataFrame(list(position_deals),columns=position_deals[0]._asdict().keys())
+            df['time'] = pd.to_datetime(df['time'], unit='s')
             print(df)
         
         # shut down connection to the MetaTrader 5 terminal
