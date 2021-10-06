@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Optional, Tuple, NamedTuple, Union
+from typing import Optional, Tuple, NamedTuple
 import numpy as np
 
 __version__: str
@@ -1085,7 +1085,7 @@ def market_book_release(symbol: str, /) -> bool:
 def copy_rates_from(
     symbol: str,
     timeframe: int,
-    date_from: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
     count: int,
     /,
 ) -> Optional[np.ndarray[np.void]]:
@@ -1240,8 +1240,8 @@ def copy_rates_from_pos(
 def copy_rates_range(
     symbol: str,
     timeframe: int,
-    date_from: Union[dt.datetime, int],
-    date_to: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
+    date_to: dt.datetime | int,
     /,
 ) -> Optional[np.ndarray[np.void]]:
     """Get bars in the specified date range from the MetaTrader 5 terminal.
@@ -1317,7 +1317,7 @@ def copy_rates_range(
 
 def copy_ticks_from(
     symbol: str,
-    date_from: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
     count: int,
     flags: int,
     /,
@@ -1414,8 +1414,8 @@ def copy_ticks_from(
 
 def copy_ticks_range(
     symbol: str,
-    date_from: Union[dt.datetime, int],
-    date_to: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
+    date_to: dt.datetime | int,
     flags: int,
     /,
 ) -> Optional[np.ndarray[np.void]]:
@@ -1783,7 +1783,7 @@ class TradeRequest(NamedTuple):
     type: int
     type_filling: int
     type_time: int
-    expiration: Union[dt.datetime, int]
+    expiration: dt.datetime | int
     comment: str
     position: int
     position_by: int
@@ -2230,8 +2230,8 @@ def positions_get(
 
 
 def history_orders_total(
-    date_from: Union[dt.datetime, int],
-    date_to: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
+    date_to: dt.datetime | int,
     /,
 ) -> int:
     """Get the number of orders in trading history within the specified interval.
@@ -2274,8 +2274,8 @@ def history_orders_total(
 
 
 def history_orders_get(
-    date_from: Optional[Union[dt.datetime, int]] = None,
-    date_to: Optional[Union[dt.datetime, int]] = None,
+    date_from: Optional[dt.datetime | int] = None,
+    date_to: Optional[dt.datetime | int] = None,
     /,
     group: Optional[str] = None,
     ticket: Optional[int] = None,
@@ -2362,8 +2362,8 @@ def history_orders_get(
 
 
 def history_deals_total(
-    date_from: Union[dt.datetime, int],
-    date_to: Union[dt.datetime, int],
+    date_from: dt.datetime | int,
+    date_to: dt.datetime | int,
     /,
 ) -> int:
     """Get the number of deals in trading history within the specified interval.
@@ -2426,8 +2426,8 @@ class TradeDeal(NamedTuple):
 
 
 def history_deals_get(
-    date_from: Optional[Union[dt.datetime, int]] = None,
-    date_to: Optional[Union[dt.datetime, int]] = None,
+    date_from: Optional[dt.datetime | int] = None,
+    date_to: Optional[dt.datetime | int] = None,
     /,
     group: Optional[str] = None,
     ticket: Optional[int] = None,
